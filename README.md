@@ -1,4 +1,4 @@
-# Advent of code 2021
+# Advent of code 2022
 
 ## Prerequisite
 Must have `gnu-sed` to run `yarn test` or `yarn start`. For mac users, install `gnu-sed` with `brew`.
