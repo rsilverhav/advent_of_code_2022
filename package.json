@@ -1,0 +1,24 @@
+{
+  "name": "advent_2021",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "scripts/run.sh",
+    "test": "scripts/run_test.sh",
+    "test_debug": "npx jest --testRegex \"src/.*Spec.*\\.ts\"",
+    "new_day": "scripts/new_day.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^14.14.10",
+    "jest": "^26.6.3",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.1.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.3"
+  }
+}
