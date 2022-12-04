@@ -1,7 +1,11 @@
 import { readInput } from '../readInput'
-import { sumCalories } from './sumCalories'
+import { largestSum } from './largestSum'
 
 const input = readInput('./src/1/input_1')
 
-console.log('1b: ', sumCalories(input))
-
+console.log(
+  '1b: ',
+  largestSum(input)
+    .slice(0, 3)
+    .reduce((sum, next) => (sum += next), 0)
+)
