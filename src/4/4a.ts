@@ -1,7 +1,6 @@
 import { readInput } from '../readInput'
-import { findOverlappingSectionAssignments } from './findOverlappingSectionAssignments'
+import { findSectionWithinSection } from './findOverlappingSectionAssignments'
 
 const input = readInput('./src/4/input_4')
 
-console.log('4a: ', findOverlappingSectionAssignments(input))
-
+console.log('4a: ', findSectionWithinSection(input))
