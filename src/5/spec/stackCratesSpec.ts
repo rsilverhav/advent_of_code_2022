@@ -1,4 +1,4 @@
-import { stackCrates } from '../stackCrates'
+import { stackCratesRetainOrder, stackCratesReversed } from '../stackCrates'
 
 const startStacks = [
   [' ', 'D', ' '],
@@ -13,8 +13,14 @@ const moves = [
   'move 1 from 1 to 2',
 ]
 
-describe('stackCrates', () => {
+describe('stackCratesReversed', () => {
   it('parses the given test data', () => {
-    expect(stackCrates(startStacks, moves)).toBe('CMZ')
+    expect(stackCratesReversed(startStacks, moves)).toBe('CMZ')
+  })
+})
+
+describe('stackCratesRetainOrder', () => {
+  it('parses the given test data', () => {
+    expect(stackCratesRetainOrder(startStacks, moves)).toBe('MCD')
   })
 })

@@ -1,12 +1,12 @@
 import { readInput } from '../readInput'
-import { stackCrates } from './stackCrates'
+import { stackCratesReversed } from './stackCrates'
 
 const stacks = readInput('./src/5/input_5_stacks')
 const moves = readInput('./src/5/input_5_moves')
 
 console.log(
   '5a: ',
-  stackCrates(
+  stackCratesReversed(
     stacks.map((s) => s.split(', ')),
     moves
   )

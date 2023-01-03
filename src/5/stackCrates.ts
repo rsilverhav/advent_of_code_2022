@@ -1,9 +1,21 @@
-export function stackCrates(stacks: string[][], moves: string[]) {
+export function stackCratesReversed(stacks: string[][], moves: string[]) {
+  return stackCrates(stacks, moves, (values) => values.reverse())
+}
+
+export function stackCratesRetainOrder(stacks: string[][], moves: string[]) {
+  return stackCrates(stacks, moves, (values) => values)
+}
+
+function stackCrates(
+  stacks: string[][],
+  moves: string[],
+  handleMovedValues: (oldValues: string[]) => string[]
+) {
   const { stacks: parsedStacks, moves: parsedMoves } = parseStartState(stacks, moves)
 
   for (const move of parsedMoves) {
     const values = parsedStacks[move.from].splice(-move.amount)
-    parsedStacks[move.to].push(...values.reverse())
+    parsedStacks[move.to].push(...handleMovedValues(values))
   }
 
   return parsedStacks.map((s) => s[s.length - 1]).join('')

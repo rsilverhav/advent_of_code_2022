@@ -1,7 +1,13 @@
 import { readInput } from '../readInput'
-import { stackCrates } from './stackCrates'
+import { stackCratesRetainOrder } from './stackCrates'
 
-const input = readInput('./src/5/input_5')
+const stacks = readInput('./src/5/input_5_stacks')
+const moves = readInput('./src/5/input_5_moves')
 
-console.log('5b: ', stackCrates(input))
-
+console.log(
+  '5b: ',
+  stackCratesRetainOrder(
+    stacks.map((s) => s.split(', ')),
+    moves
+  )
+)
