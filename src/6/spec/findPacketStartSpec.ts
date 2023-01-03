@@ -26,7 +26,7 @@ const testData: { input: string; expected: number }[] = [
 describe('findPacketStart', () => {
   for (const data of testData) {
     it(`parses the given test data ${data.input}`, () => {
-      expect(findPacketStart(data.input)).toBe(data.expected)
+      expect(findPacketStart(data.input, 4)).toBe(data.expected)
     })
   }
 })
