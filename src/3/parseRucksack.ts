@@ -11,6 +11,20 @@ export function parseRucksack(input: string) {
   })
 }
 
+export function parseRucksacksBadges(inputs: string[]) {
+  if (inputs.length % 3 !== 0) {
+    throw new Error('Incorrect input l')
+  }
+
+  const tempInputs = [...inputs]
+  let sum = 0
+  while (tempInputs.length > 0) {
+    const currentInputs = tempInputs.splice(0, 3)
+    sum += parseRucksackCollections(() => currentInputs)
+  }
+  return sum
+}
+
 function parseRucksackCollections(getItemCollection: () => string[]) {
   const collections = getItemCollection()
 
