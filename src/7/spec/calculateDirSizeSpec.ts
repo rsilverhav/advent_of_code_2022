@@ -1,4 +1,4 @@
-import { calculateDirSize } from '../calculateDirSize'
+import { sumDirsSmallerThan } from '../calculateDirSize'
 
 const testData = [
   '$ cd /',
@@ -26,8 +26,8 @@ const testData = [
   '7214296 k',
 ]
 
-describe('calculateDirSize', () => {
+describe('sumDirsSmallerThan', () => {
   it('parses the given test data', () => {
-    expect(calculateDirSize(testData)).toBe(95437)
+    expect(sumDirsSmallerThan(testData, 100000)).toBe(95437)
   })
 })

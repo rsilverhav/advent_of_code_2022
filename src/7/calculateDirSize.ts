@@ -1,4 +1,9 @@
-export function calculateDirSize(inputs: string[]) {
+export function sumDirsSmallerThan(inputs: string[], limit: number) {
+  const result = calculateDirSizes(inputs)
+  return Object.entries(result).reduce((sum, next) => (next[1] <= limit ? sum + next[1] : sum), 0)
+}
+
+function calculateDirSizes(inputs: string[]) {
   const dirs: Dir[] = [{ name: '', parent: undefined, children: [], files: [] }]
   let currentDir: Dir = dirs[0]
 
@@ -69,7 +74,7 @@ export function calculateDirSize(inputs: string[]) {
   const result: Record<string, number> = {}
   recursiveSizeCalc(dirs[0], result)
 
-  return Object.entries(result).reduce((sum, next) => (next[1] <= 100000 ? sum + next[1] : sum), 0)
+  return result
 }
 
 function recursiveSizeCalc(dir: Dir, cacheObj: Record<string, number>): number {
