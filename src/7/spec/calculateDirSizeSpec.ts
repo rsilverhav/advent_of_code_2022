@@ -1,4 +1,4 @@
-import { sumDirsSmallerThan } from '../calculateDirSize'
+import { findSmallestDirToDelete, sumDirSizes } from '../calculateDirSize'
 
 const testData = [
   '$ cd /',
@@ -26,8 +26,14 @@ const testData = [
   '7214296 k',
 ]
 
-describe('sumDirsSmallerThan', () => {
+describe('sumDirSizes', () => {
   it('parses the given test data', () => {
-    expect(sumDirsSmallerThan(testData, 100000)).toBe(95437)
+    expect(sumDirSizes(testData, 100000)).toBe(95437)
+  })
+})
+
+describe('sumDirSizes', () => {
+  fit('parses the given test data', () => {
+    expect(findSmallestDirToDelete(testData)).toBe(24933642)
   })
 })

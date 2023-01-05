@@ -1,7 +1,6 @@
 import { readInput } from '../readInput'
-import { calculateDirSize } from './calculateDirSize'
+import { findSmallestDirToDelete } from './calculateDirSize'
 
 const input = readInput('./src/7/input_7')
 
-console.log('7b: ', calculateDirSize(input))
-
+console.log('7b: ', findSmallestDirToDelete(input))

@@ -1,6 +1,23 @@
-export function sumDirsSmallerThan(inputs: string[], limit: number) {
+const filesystemSize = 70000000
+const updateSize = 30000000
+
+export function sumDirSizes(inputs: string[], upperLimit: number) {
   const result = calculateDirSizes(inputs)
-  return Object.entries(result).reduce((sum, next) => (next[1] <= limit ? sum + next[1] : sum), 0)
+  return Object.entries(result).reduce(
+    (sum, next) => (next[1] <= upperLimit ? sum + next[1] : sum),
+    0
+  )
+}
+
+export function findSmallestDirToDelete(inputs: string[]) {
+  const result = calculateDirSizes(inputs)
+  const totalSizeUsed = result['/']
+  const toDelete = updateSize - (filesystemSize - totalSizeUsed)
+
+  const sortedResult = Object.entries(result)
+    .map((res) => res[1])
+    .sort((a, b) => (a < b ? -1 : 1))
+  return sortedResult.find((result) => result > toDelete)
 }
 
 function calculateDirSizes(inputs: string[]) {
