@@ -5,12 +5,17 @@ export function checkTreeVisibility(inputs: string[]) {
 
   for (let y = 1; y < inputs.length - 1; y++) {
     for (let x = 1; x < inputs[y].length - 1; x++) {
+      const visibleTrees = checkTreeVisible({
+        heightMatrix,
+        x,
+        y,
+      })
+
       if (
-        checkTreeVisible({
-          heightMatrix,
-          x,
-          y,
-        })
+        visibleTrees[0] === inputs[y].length - x - 1 ||
+        visibleTrees[1] === x ||
+        visibleTrees[2] === inputs.length - y - 1 ||
+        visibleTrees[3] === y
       ) {
         nrOfVisible += 1
       }
@@ -28,7 +33,7 @@ function checkTreeVisible({
   heightMatrix: number[][]
   x: number
   y: number
-}): boolean {
+}): number[] {
   const currentHeight = heightMatrix[y][x]
   const checkData: { x: number; y: number }[] = [
     {
@@ -49,11 +54,9 @@ function checkTreeVisible({
     },
   ]
 
-  let currentVisible: boolean = true
+  const visibleTrees = new Array(checkData.length).fill(0)
 
-  for (const check of checkData) {
-    currentVisible = true
-
+  for (const [index, check] of checkData.entries()) {
     let checkX = x + check.x
     let checkY = y + check.y
 
@@ -61,18 +64,15 @@ function checkTreeVisible({
       checkY >= 0 &&
       checkY < heightMatrix.length &&
       checkX >= 0 &&
-      checkX < heightMatrix[y].length &&
-      currentVisible
+      checkX < heightMatrix[y].length
     ) {
-      if (heightMatrix[checkY][checkX] >= currentHeight) {
-        currentVisible = false
+      if (heightMatrix[checkY][checkX] < currentHeight) {
+        visibleTrees[index] += 1
       }
       checkX = checkX + check.x
       checkY = checkY + check.y
     }
-    if (currentVisible) {
-      return true
-    }
   }
-  return currentVisible
+
+  return visibleTrees
 }
