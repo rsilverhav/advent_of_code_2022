@@ -33,7 +33,7 @@ describe('sumDirSizes', () => {
 })
 
 describe('sumDirSizes', () => {
-  fit('parses the given test data', () => {
+  it('parses the given test data', () => {
     expect(findSmallestDirToDelete(testData)).toBe(24933642)
   })
 })

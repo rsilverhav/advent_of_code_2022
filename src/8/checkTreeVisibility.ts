@@ -1,14 +1,16 @@
 export function checkTreeVisibility(inputs: string[]) {
-  const heightMatrix = inputs.map((input) => input.split('').map((i) => Number(i)))
-
   let nrOfVisible = 0
 
   for (let y = 1; y < inputs.length - 1; y++) {
     for (let x = 1; x < inputs[y].length - 1; x++) {
       const visibleTrees = checkTreeVisible({
-        heightMatrix,
+        inputs,
         x,
         y,
+        isVisible: (currentHeight, height) => ({
+          isVisible: height < currentHeight,
+          shouldBreakOnVisible: false,
+        }),
       })
 
       if (
@@ -25,15 +27,45 @@ export function checkTreeVisibility(inputs: string[]) {
   return (inputs.length - 1) * 4 + nrOfVisible
 }
 
-function checkTreeVisible({
-  heightMatrix,
-  x,
-  y,
-}: {
-  heightMatrix: number[][]
+export function findTreeWithMostVisbleTrees(inputs: string[]) {
+  let highestScenicValue = 0
+  for (let y = 1; y < inputs.length - 1; y++) {
+    for (let x = 1; x < inputs[y].length - 1; x++) {
+      const visibleTrees = checkTreeVisible({
+        inputs,
+        x,
+        y,
+        isVisible: (currentHeight, height) => {
+          return {
+            isVisible: true,
+            shouldBreakOnVisible: height >= currentHeight,
+          }
+        },
+      })
+
+      let scenicScore = visibleTrees.reduce((acc, next) => acc * next)
+
+      if (scenicScore > highestScenicValue) {
+        highestScenicValue = scenicScore
+      }
+    }
+  }
+
+  return highestScenicValue
+}
+
+type CheckTreeInputs = {
+  inputs: string[]
   x: number
   y: number
-}): number[] {
+  isVisible: (
+    currentHeight: number,
+    height: number
+  ) => { isVisible: boolean; shouldBreakOnVisible: boolean }
+}
+
+function checkTreeVisible({ inputs, x, y, isVisible }: CheckTreeInputs): number[] {
+  const heightMatrix = inputs.map((input) => input.split('').map((i) => Number(i)))
   const currentHeight = heightMatrix[y][x]
   const checkData: { x: number; y: number }[] = [
     {
@@ -66,8 +98,12 @@ function checkTreeVisible({
       checkX >= 0 &&
       checkX < heightMatrix[y].length
     ) {
-      if (heightMatrix[checkY][checkX] < currentHeight) {
+      const res = isVisible(currentHeight, heightMatrix[checkY][checkX])
+      if (res.isVisible) {
         visibleTrees[index] += 1
+      }
+      if (res.shouldBreakOnVisible) {
+        break
       }
       checkX = checkX + check.x
       checkY = checkY + check.y
