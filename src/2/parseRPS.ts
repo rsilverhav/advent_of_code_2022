@@ -1,5 +1,5 @@
 export function parseRPSConstant(input: string) {
-  return parseRPS(input, (playerChar: string) => convertPlayerInput(playerChar))
+  return parseRPS(input, (playerChar: string) => PlayerMoveMap[playerChar])
 }
 
 export function parseRPSReactive(input: string) {
@@ -35,10 +35,6 @@ const OpponentMoveMap: Record<string, RPSInput> = {
   C: RPSInput.Scissor,
 }
 
-function convertPlayerInput(playerChar: string): RPSInput {
-  return PlayerMoveMap[playerChar]
-}
-
 function parseRPS(
   input: string,
   getPlayerInput: (playerChar: string, opponentInput: RPSInput) => RPSInput
@@ -48,7 +44,7 @@ function parseRPS(
   const opponentInput = convertOpponentInput(opponentChar)
   const playerInput = getPlayerInput(playerChar, opponentInput)
 
-  if (opponentInput === playerInput) {
+  if (opponentInput === getDrawInput(playerInput)) {
     return playerInput + 3
   } else if (opponentInput === getLossInput(playerInput)) {
     return playerInput + 6
