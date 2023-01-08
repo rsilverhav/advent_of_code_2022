@@ -4,18 +4,14 @@ export function checkTreeVisibility(inputs: string[]) {
   let nrOfVisible = 0
 
   for (let y = 1; y < inputs.length - 1; y++) {
-    for (let x = 1; x < inputs[0].length - 1; x++) {
-      // Right
-      // let checkX = x - 1
-      // while (checkX >= 0) {
-      //   if (heightMatrix[y][checkX] >= currentHeight) {
-      //     currentVisible = false
-      //   }
-      //   checkX--
-      // }
-
-      if (checkTreeVisible({ heightMatrix, x, y })) {
-        console.log('Visible @', x, y)
+    for (let x = 1; x < inputs[y].length - 1; x++) {
+      if (
+        checkTreeVisible({
+          heightMatrix,
+          x,
+          y,
+        })
+      ) {
         nrOfVisible += 1
       }
     }
@@ -34,14 +30,22 @@ function checkTreeVisible({
   y: number
 }): boolean {
   const currentHeight = heightMatrix[y][x]
-  const checkData: { length: number; getHeightValue: (loopValue: number) => number }[] = [
+  const checkData: { x: number; y: number }[] = [
     {
-      length: heightMatrix[0].length,
-      getHeightValue: (loopValue) => heightMatrix[y][loopValue],
+      x: 1,
+      y: 0,
     },
     {
-      length: heightMatrix.length,
-      getHeightValue: (loopValue) => heightMatrix[loopValue][x],
+      x: -1,
+      y: 0,
+    },
+    {
+      x: 0,
+      y: 1,
+    },
+    {
+      x: 0,
+      y: -1,
     },
   ]
 
@@ -49,22 +53,25 @@ function checkTreeVisible({
 
   for (const check of checkData) {
     currentVisible = true
-    for (let loopValue = 0; loopValue < check.length; loopValue++) {
-      if (!currentVisible) {
-        break
-      }
 
-      if (loopValue === x) {
-        if (currentVisible) {
-          return true
-        }
+    let checkX = x + check.x
+    let checkY = y + check.y
 
-        currentVisible = true
-        continue
-      }
-      if (check.getHeightValue(loopValue) >= currentHeight) {
+    while (
+      checkY >= 0 &&
+      checkY < heightMatrix.length &&
+      checkX >= 0 &&
+      checkX < heightMatrix[y].length &&
+      currentVisible
+    ) {
+      if (heightMatrix[checkY][checkX] >= currentHeight) {
         currentVisible = false
       }
+      checkX = checkX + check.x
+      checkY = checkY + check.y
+    }
+    if (currentVisible) {
+      return true
     }
   }
   return currentVisible
