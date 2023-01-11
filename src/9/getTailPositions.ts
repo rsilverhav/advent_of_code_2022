@@ -1,13 +1,50 @@
-export function getTailPositions(inputs: string[]) {
-  return simluateRopeMovements(parseInputs(inputs)).uniqueTailPositions
+export function getTailPositions(inputs: string[], tailLength: number) {
+  const movements = parseInputs(inputs)
+  let knotPositions: Point[] = [...new Array(tailLength)].map((_) => ({ x: 0, y: 0 }))
+  const tailVisited = new Set<string>()
+
+  for (const movement of movements) {
+    const delta = directionDeltas[movement.direction]
+    for (let distance = 0; distance < movement.distance; distance++) {
+      for (let knotIndex = 0; knotIndex < knotPositions.length; knotIndex++) {
+        // Update head
+        if (knotIndex === 0) {
+          knotPositions[knotIndex] = addPoints(knotPositions[knotIndex], delta)
+          // Update child knot
+        } else {
+          const parentKnot = knotPositions[knotIndex - 1]
+          const distanceToParent = getDistance(
+            knotPositions[knotIndex - 1],
+            knotPositions[knotIndex]
+          )
+
+          if (distanceToParent >= 2) {
+            // Handle X
+            const xDiff = parentKnot.x - knotPositions[knotIndex].x
+            knotPositions[knotIndex] = addPoints(knotPositions[knotIndex], {
+              x: xDiff / (Math.abs(xDiff) || 1),
+              y: 0,
+            })
+
+            // Handle Y
+            const yDiff = parentKnot.y - knotPositions[knotIndex].y
+            knotPositions[knotIndex] = addPoints(knotPositions[knotIndex], {
+              x: 0,
+              y: yDiff / (Math.abs(yDiff) || 1),
+            })
+          }
+        }
+
+        if (knotIndex === knotPositions.length - 1) {
+          tailVisited.add(`${knotPositions[knotIndex].x},${knotPositions[knotIndex].y}`)
+        }
+      }
+    }
+  }
+  return tailVisited.size
 }
 
-enum Direction {
-  Right = 'R',
-  Left = 'L',
-  Up = 'U',
-  Down = 'D',
-}
+type Direction = 'R' | 'L' | 'U' | 'D'
 
 interface Movement {
   direction: Direction
@@ -30,31 +67,11 @@ interface Point {
 }
 
 const directionDeltas: Record<Direction, Point> = {
-  [Direction.Right]: { x: 1, y: 0 },
-  [Direction.Left]: { x: -1, y: 0 },
-  [Direction.Up]: { x: 0, y: 1 },
-  [Direction.Down]: { x: 0, y: -1 },
+  R: { x: 1, y: 0 },
+  L: { x: -1, y: 0 },
+  U: { x: 0, y: 1 },
+  D: { x: 0, y: -1 },
 }
-
-// DEBUG FUNCTION
-// function printMap(size: number, positions: { position: Point; char: string }[]) {
-//   console.log('\n\n')
-//   const rows: string[] = []
-//
-//   for (let y = 0; y < size; y++) {
-//     let str = ''
-//     for (let x = 0; x < size; x++) {
-//       let position = positions.find((p) => x === p.position.x && y === p.position.y)
-//       if (position) {
-//         str += position.char
-//       } else {
-//         str += '.'
-//       }
-//     }
-//     rows.push(str)
-//   }
-//   console.log(rows.reverse().join('\n'))
-// }
 
 // Point functions
 function addPoints(p1: Point, p2: Point): Point {
@@ -63,34 +80,4 @@ function addPoints(p1: Point, p2: Point): Point {
 
 function getDistance(p1: Point, p2: Point) {
   return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2))
-}
-
-function simluateRopeMovements(movements: Movement[]): { uniqueTailPositions: number } {
-  let headPosition: Point = { x: 0, y: 0 }
-  let tailPosition: Point = { x: 0, y: 0 }
-  // printMap(6, [{ position: headPosition, char: 'H' }])
-
-  const tailVisited = new Set<string>()
-  tailVisited.add(`${tailPosition.x},${tailPosition.y}`)
-
-  for (const movement of movements) {
-    const delta = directionDeltas[movement.direction]
-    for (let i = 0; i < movement.distance; i++) {
-      // Update head
-      headPosition = addPoints(headPosition, delta)
-
-      // Update tail if needed
-      if (getDistance(headPosition, tailPosition) >= 2) {
-        tailPosition = addPoints(headPosition, { x: -delta.x, y: -delta.y })
-        tailVisited.add(`${tailPosition.x},${tailPosition.y}`)
-      }
-      // printMap(6, [
-      //   { position: headPosition, char: 'H' },
-      //   { position: tailPosition, char: 'T' },
-      // ])
-    }
-  }
-  return {
-    uniqueTailPositions: tailVisited.size,
-  }
 }
