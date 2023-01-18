@@ -1,5 +1,5 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  testRegex: "src/.*_spec\\.ts$",
+  testRegex: "src/.*Spec\\.ts$",
 };
